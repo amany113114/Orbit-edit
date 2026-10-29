@@ -45,24 +45,34 @@ def clean_youtube_url(url: str) -> str:
     return url
 
 def get_ytdl_base_opts():
+    """
+    Build yt-dlp options tuned to bypass YouTube bot detection.
+    - Uses only ios and android player clients (mobile Protobuf API).
+    - mweb is excluded because YouTube fingerprints it aggressively.
+    - player_skip only skips 'configs' (not 'webpage') so consent/age-gate
+      pages are still resolved when needed.
+    - User-Agent matches a real iPhone 18 / Safari string for 2026.
+    """
     opts = {
         'quiet': True,
         'no_warnings': True,
         'nocheckcertificate': True,
         'geo_bypass': True,
         'noplaylist': True,
-        'user_agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
+        'socket_timeout': 30,
+        'retries': 3,
+        'user_agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1',
         'http_headers': {
-            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
             'Accept-Language': 'en-US,en;q=0.9',
             'Sec-Fetch-Mode': 'navigate',
         },
         'extractor_args': {
             'youtube': {
-                'player_client': ['ios', 'android', 'mweb'],
-                'player_skip': ['configs', 'webpage'],
-                'skip': ['hls']
+                'player_client': ['ios', 'android'],
+                'player_skip': ['configs'],
+                'skip': ['hls', 'translated_subs']
             }
         }
     }
@@ -192,8 +202,10 @@ def build_media_stream_file(url: str, fmt: str, quality: str) -> tuple[str, str,
         ydl_opts = get_ytdl_base_opts()
         ydl_opts['outtmpl'] = f"{base_out}.%(ext)s"
         
-        # Extract title first if possible
-        with yt_dlp.YoutubeDL({'quiet': True, 'nocheckcertificate': True}) as ydl_info:
+        # Extract title first if possible (re-uses mobile client opts to avoid bot detection)
+        title_opts = get_ytdl_base_opts()
+        title_opts['skip_download'] = True
+        with yt_dlp.YoutubeDL(title_opts) as ydl_info:
             info = ydl_info.extract_info(url, download=False)
             if info and info.get('title'):
                 raw_title = info.get('title')

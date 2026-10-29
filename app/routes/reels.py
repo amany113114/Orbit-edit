@@ -54,19 +54,33 @@ def clean_reel_url(url: str) -> str:
     return url
 
 def get_reel_base_opts():
+    """
+    Base yt-dlp options for Reel/Short extraction.
+    YouTube Shorts routes through ios/android clients to avoid bot detection.
+    Instagram uses X-IG-App-ID header for public GraphQL access.
+    """
     opts = {
         'quiet': True,
         'no_warnings': True,
         'nocheckcertificate': True,
         'geo_bypass': True,
         'noplaylist': True,
-        'user_agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
+        'socket_timeout': 30,
+        'retries': 3,
+        'user_agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1',
         'http_headers': {
-            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1',
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
             'Accept-Language': 'en-US,en;q=0.9',
             'X-IG-App-ID': '936619743392459',
             'Sec-Fetch-Mode': 'cors',
+        },
+        'extractor_args': {
+            'youtube': {
+                'player_client': ['ios', 'android'],
+                'player_skip': ['configs'],
+                'skip': ['hls', 'translated_subs']
+            }
         }
     }
     # Optional cookies & session support via env
