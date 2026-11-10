@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORBIT | Dynamic Multi-Utility Platform</title>
+    <meta name="description" content="ORBIT is a dynamic multi-utility platform featuring YouTube media extractor, AI background isolation studio, professional image editor, PDF document suite, GST tax invoice generator, and CV maker.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛰️</text></svg>">
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9407998116419960"
+     crossorigin="anonymous"></script>
+    <!-- Client-Side AI & PDF Processing Engines -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/pdf-lib@1.17.9/dist/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <!-- Interactive Cosmic Canvas Background -->
+    <canvas id="orbit-canvas"></canvas>
+
+    <div class="app-wrapper">
+
+        <!-- Header / Brand Bar -->
+        <header class="orbit-header">
+            <a href="#" class="brand-container">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none">
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <ellipse cx="12" cy="12" rx="9" ry="3" transform="rotate(-30 12 12)"></ellipse>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="brand-title gradient-text">ORBIT</h1>
+                    <p class="brand-tagline">Dynamic Utility Suite</p>
+                </div>
+            </a>
+
+            <div class="header-actions">
+                <div class="quantum-system-widget" id="quantum-widget" title="ORBIT System Engine & Temp Storage Monitor">
+                    <div class="quantum-status-ring">
+                        <span class="quantum-pulse-dot"></span>
+                    </div>
+                    <div class="quantum-info">
+                        <span class="quantum-label">SYSTEM ENGINE</span>
+                        <span id="storage-status-text" class="quantum-val">0.0 MB Temp (0 files)</span>
+                    </div>
+                    <button id="btn-manual-cleanup" class="btn-quantum-purge" title="Purge Expired Temporary Storage & Boost Engine">
+                        <svg class="purge-spin-icon" viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none">
+                            <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.85.83 6.72 2.24L21 8"></path>
+                            <polyline points="21 3 21 8 16 8"></polyline>
+                        </svg>
+                        <span>PURGE CACHE</span>
+                    </button>
+                    <button id="btn-backend-settings" class="btn-quantum-purge" style="border-color:rgba(0,240,255,0.4); background:rgba(0,240,255,0.08);" title="Dedicated Backend Proxy Settings">
+                        <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2" fill="none">
+                            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                            <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                            <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                        </svg>
+                        <span id="backend-status-badge">BACKEND PROXY</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tool Navigation Bar -->
+        <nav class="tool-nav-container">
+            <div class="tool-tabs">
+                <button class="tool-tab active" data-tool="youtube">
+                    <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"></path><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon></svg>
+                    <span>YouTube Extractor</span>
+                </button>
+                <button class="tool-tab" data-tool="reels">
+                    <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                    <span>Reel Downloader</span>
+                </button>
+                <button class="tool-tab" data-tool="bg-remover">
+                    <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                    <span>AI BG Remover</span>
+                </button>
+                <button class="tool-tab" data-tool="img-resizer">
+                    <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><polyline points="11 3 11 11 3 11"></polyline></svg>
+                    <span>Image Editor & Resizer</span>
+                </button>
+                <button class="tool-tab" data-tool="pdf-tools">
+                    <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    <span>PDF Editing</span>
+                </button>
+                <button class="tool-tab" data-tool="invoice">
+                    <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+                    <span>Invoice</span>
+                </button>
+                <button class="tool-tab" data-tool="cv-maker">
+                    <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+                    <span>CV Maker</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main id="orbit-main-content">
+
+            <!-- Tool 1: ORBIT Video & Audio Extractor -->
+            <section id="view-youtube" class="tool-view active">
+                <div class="tool-header-block">
+                    <h2>ORBIT Video & Audio Extractor</h2>
+                    <p>Paste any YouTube video, Shorts, or music URL to extract MP4 video (1080p, 720p, 480p) or 320kbps MP3 audio with instant one-click download.</p>
+                </div>
+                <div class="glass-panel card-content">
+                    <form id="yt-fetch-form" class="form-group">
+                        <label for="yt-url-input">Paste Video Link Below (YouTube, Shorts, Music):</label>
+                        <div class="input-group orbit-input-group">
+                            <input type="url" id="yt-url-input" class="input-glow orbit-search-input" placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..." required>
+                            <button type="submit" id="yt-fetch-btn" class="btn-primary orbit-analyze-btn">
+                                <span>⚡ EXTRACT MEDIA</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- YouTube Extraction Loading State Indicator -->
+                    <div id="yt-loading-box" class="extraction-loading-state" style="display:none;">
+                        <div class="quantum-loader-ring"></div>
+                        <div class="loading-state-content">
+                            <h4 id="yt-loading-status" class="loading-state-title">⚡ Connecting to Dedicated Extraction Proxy...</h4>
+                            <p id="yt-loading-subtext" class="loading-state-sub">Passing PO Tokens & iOS/Android parameters to bypass 403 Forbidden</p>
+                            <div class="loading-progress-bar">
+                                <div id="yt-loading-bar-fill" class="loading-bar-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ORBIT Media Card & Download Hub -->
+                    <div id="yt-result-box" class="orbit-media-hub" style="display:none;">
+                        <!-- Video Metadata Header -->
+                        <div class="orbit-meta-row">
+                            <div class="orbit-thumb-wrap">
+                                <img id="yt-thumb" src="" alt="Thumbnail" class="orbit-thumb">
+                                <span id="yt-duration-badge" class="orbit-badge">00:00</span>
+                            </div>
+                            <div>
+                                <h3 id="yt-title" style="color:var(--text-main); font-size:1.1rem; line-height:1.4; margin-bottom:0.4rem;">Video Title</h3>
+                                <div style="display:flex; gap:0.75rem; flex-wrap:wrap; font-size:0.85rem; color:var(--text-muted); margin-bottom:0.75rem;">
+                                    <span id="yt-author" style="color:var(--primary-cyan); font-weight:600;">Channel</span> • 
+                                    <span id="yt-views-badge">👁️ 0 views</span>
+                                </div>
+                                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                                    <a id="btn-dl-thumb" href="#" download="thumbnail.jpg" target="_blank" class="option-btn" style="padding:0.35rem 0.75rem; font-size:0.75rem;">
+                                        🖼️ Save HD Thumbnail
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Clean ORBIT Media Preview & Engine Banner -->
+                        <div class="orbit-player-preview" style="border-radius:var(--radius-sm); overflow:hidden; border:1px solid var(--border-color); background:rgba(0,0,0,0.4); margin-bottom:1rem;">
+                            <iframe id="yt-preview-player" src="" width="100%" height="240" style="border:none; display:none;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+
+                        <div class="orbit-stream-banner" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; background:rgba(0,240,255,0.06); border:1px solid rgba(0,240,255,0.25); border-radius:var(--radius-sm); padding:0.75rem 1rem; margin-bottom:1.25rem;">
+                            <div style="display:flex; align-items:center; gap:0.5rem;">
+                                <span class="quantum-pulse-dot"></span>
+                                <span style="color:var(--primary-cyan); font-weight:700; font-size:0.85rem;">ORBIT Direct Stream Engine</span>
+                            </div>
+                            <span style="color:var(--text-muted); font-size:0.78rem;">Genuine media streams • Zero ads • Zero external redirects</span>
+                        </div>
+
+                        <!-- ORBIT Format Table -->
+                        <div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                                <h4 style="color:var(--text-muted); font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em; margin:0;">Available ORBIT Media Formats & Resolutions</h4>
+                                <span style="font-size:0.75rem; color:var(--text-dim);">Direct stream download</span>
+                            </div>
+                            <div id="yt-format-table" class="orbit-format-table"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tool: ORBIT Reel & Short Video Downloader -->
+            <section id="view-reels" class="tool-view">
+                <div class="tool-header-block">
+                    <h2>ORBIT Reel & Short Video Downloader</h2>
+                    <p>Download trending Reels and Short videos from Instagram, Facebook, TikTok, and YouTube Shorts in full HD MP4 or 320kbps MP3 audio with watermarks removed.</p>
+                </div>
+                <div class="glass-panel card-content">
+                    <div class="reel-platform-chips" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:1rem;">
+                        <span class="platform-chip active" data-platform="all">🌐 All Platforms</span>
+                        <span class="platform-chip" data-platform="instagram">📸 Instagram Reels</span>
+                        <span class="platform-chip" data-platform="facebook">📘 Facebook Reels</span>
+                        <span class="platform-chip" data-platform="tiktok">🎵 TikTok</span>
+                        <span class="platform-chip" data-platform="shorts">▶️ YouTube Shorts</span>
+                    </div>
+
+                    <form id="reel-fetch-form" class="form-group">
+                        <label for="reel-url-input">Paste Reel / Short Video Link Below:</label>
+                        <div class="input-group orbit-input-group">
+                            <input type="url" id="reel-url-input" class="input-glow orbit-search-input" placeholder="https://www.instagram.com/reel/... or https://www.facebook.com/reel/... or TikTok" required>
+                            <button type="submit" id="reel-fetch-btn" class="btn-primary orbit-analyze-btn">
+                                <span>⚡ EXTRACT REEL</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Reel Extraction Loading State Indicator -->
+                    <div id="reel-loading-box" class="extraction-loading-state" style="display:none;">
+                        <div class="quantum-loader-ring" style="border-top-color:#ff007f;"></div>
+                        <div class="loading-state-content">
+                            <h4 id="reel-loading-status" class="loading-state-title">⚡ Connecting to Reel Proxy...</h4>
+                            <p id="reel-loading-subtext" class="loading-state-sub">Extracting media via GraphQL doc_id & bypassing platform rate limits</p>
+                            <div class="loading-progress-bar">
+                                <div id="reel-loading-bar-fill" class="loading-bar-fill" style="background:linear-gradient(90deg, #ff007f, #7928ca);"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reel Media Hub -->
+                    <div id="reel-result-box" class="orbit-media-hub" style="display:none;">
+                        <div class="orbit-meta-row">
+                            <div class="orbit-thumb-wrap">
+                                <img id="reel-thumb" src="" alt="Reel Thumbnail" class="orbit-thumb">
+                                <span id="reel-platform-badge" class="orbit-badge" style="background:#ff007f; color:#fff;">Reel</span>
+                            </div>
+                            <div>
+                                <h3 id="reel-title" style="color:var(--text-main); font-size:1.1rem; line-height:1.4; margin-bottom:0.4rem;">Reel Title</h3>
+                                <div style="display:flex; gap:0.75rem; flex-wrap:wrap; font-size:0.85rem; color:var(--text-muted); margin-bottom:0.75rem;">
+                                    <span id="reel-author" style="color:var(--primary-cyan); font-weight:600;">Creator</span> • 
+                                    <span id="reel-duration-badge">⏱️ 00:30</span>
+                                </div>
+                                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                                    <a id="btn-dl-reel-thumb" href="#" download="reel_cover.jpg" target="_blank" class="option-btn" style="padding:0.35rem 0.75rem; font-size:0.75rem;">
+                                        🖼️ Save Cover Photo
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- In-Page Reel Video Player Preview -->
+                        <div class="orbit-player-preview" style="border-radius:var(--radius-sm); overflow:hidden; border:1px solid var(--border-color); background:rgba(0,0,0,0.6); margin-bottom:1rem; text-align:center;">
+                            <video id="reel-preview-video" controls playsinline style="max-height:360px; width:100%; display:none; background:#000; border-radius:var(--radius-sm);"></video>
+                        </div>
+
+                        <div class="orbit-stream-banner" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; background:rgba(255,0,128,0.06); border:1px solid rgba(255,0,128,0.25); border-radius:var(--radius-sm); padding:0.75rem 1rem; margin-bottom:1.25rem;">
+                            <div style="display:flex; align-items:center; gap:0.5rem;">
+                                <span class="quantum-pulse-dot" style="background:#ff007f; box-shadow:0 0 10px #ff007f;"></span>
+                                <span style="color:#ff007f; font-weight:700; font-size:0.85rem;">ORBIT Reel Extraction Engine</span>
+                            </div>
+                            <span style="color:var(--text-muted); font-size:0.78rem;">Full HD • Original Sound • Instant Direct Download</span>
+                        </div>
+
+                        <!-- Format Table -->
+                        <div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                                <h4 style="color:var(--text-muted); font-size:0.8rem; text-transform:uppercase; letter-spacing:0.05em; margin:0;">Available Reel Formats & Resolutions</h4>
+                                <span style="font-size:0.75rem; color:var(--text-dim);">Direct stream download</span>
+                            </div>
+                            <div id="reel-format-table" class="orbit-format-table"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tool 2: ORBIT AI Background Isolation Studio -->
+            <section id="view-bg-remover" class="tool-view">
+                <div class="tool-header-block">
+                    <h2>ORBIT AI Background Isolation Studio</h2>
+                    <p>Isolate person, portrait, selfie, or product automatically. Remove background or replace it with custom colors, scenic backdrops, uploaded photos, or DSLR blur.</p>
+                </div>
+                <div class="glass-panel card-content">
+                    <form id="bg-remover-form">
+                        <div id="bg-dropzone" class="dropzone">
+                            <div id="bg-dz-prompt">
+                                <div class="dropzone-icon">
+                                    <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                                </div>
+                                <h3 class="dropzone-title">Drop your photo here (Portrait, Selfie, Person)</h3>
+                                <p class="dropzone-subtitle">AI isolates person and creates clean cut-out</p>
+                            </div>
+
+                            <div id="bg-file-preview-card" class="file-preview-card" style="display:none;">
+                                <div class="preview-thumb-container">
+                                    <img id="bg-file-thumb" src="" alt="Selected Image Preview" class="preview-thumb">
+                                </div>
+                                <div class="preview-file-details">
+                                    <span class="preview-badge">PHOTO SELECTED</span>
+                                    <h4 id="bg-preview-name" class="preview-file-title">photo.jpg</h4>
+                                    <div class="preview-meta">
+                                        <span id="bg-preview-size">0 KB</span> • <span id="bg-preview-dim">0 × 0 px</span>
+                                    </div>
+                                    <button type="button" id="bg-remove-file-btn" class="btn-text-danger">
+                                        🗑️ Change Photo
+                                    </button>
+                                </div>
+                            </div>
+
+                            <input type="file" id="bg-file-input" class="file-input-hidden" accept="image/*">
+                        </div>
+
+                        <div style="margin-top:1.25rem; text-align:center;">
+                            <button type="submit" id="bg-process-btn" class="btn-primary" disabled>
+                                <span>✨ REMOVE BACKGROUND (AI)</span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- ORBIT Studio Interactive Workspace -->
+                    <div id="removebg-studio-box" class="removebg-studio-wrapper" style="display:none;">
+                        <!-- Left: Live Interactive Output Canvas -->
+                        <div>
+                            <h4 style="margin-bottom:0.5rem; text-align:center; font-size:0.85rem; color:var(--text-muted); text-transform:uppercase;">Live Cutout & Backdrop Preview</h4>
+                            <div class="canvas-checkerboard-container">
+                                <canvas id="bg-interactive-canvas" class="removebg-canvas"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Right: Background Customizer Panel -->
+                        <div class="bg-editor-panel">
+                            <div>
+                                <h3 style="color:var(--primary-cyan); font-size:1.1rem; margin-bottom:0.25rem;">Custom Background Options</h3>
+                                <p style="font-size:0.8rem; color:var(--text-muted);">Select or upload what you want behind the cut-out person</p>
+                            </div>
+
+                            <!-- Tabs -->
+                            <div class="bg-nav-tabs">
+                                <button type="button" class="bg-nav-tab active" data-bg-tab="transparent">🔲 Transparent</button>
+                                <button type="button" class="bg-nav-tab" data-bg-tab="color">🎨 Color</button>
+                                <button type="button" class="bg-nav-tab" data-bg-tab="presets">🖼️ Backdrops</button>
+                                <button type="button" class="bg-nav-tab" data-bg-tab="upload">📁 Custom BG</button>
+                                <button type="button" class="bg-nav-tab" data-bg-tab="blur">🌫️ Blur</button>
+                            </div>
+
+                            <!-- Tab 1: Transparent -->
+                            <div id="tab-content-transparent" class="bg-tab-content active">
+                                <p style="font-size:0.85rem; color:var(--text-muted); line-height:1.5;">
+                                    Clean transparent cut-out with full alpha transparency. Perfect for profile avatars, logos, YouTube thumbnails, and stickers.
+                                </p>
+                            </div>
+
+                            <!-- Tab 2: Solid Colors -->
+                            <div id="tab-content-color" class="bg-tab-content">
+                                <div class="bg-swatches-grid">
+                                    <button type="button" class="color-swatch-btn" data-color="#FFFFFF" style="background:#FFFFFF;" title="Studio White"></button>
+                                    <button type="button" class="color-swatch-btn" data-color="#000000" style="background:#000000;" title="Jet Black"></button>
+                                    <button type="button" class="color-swatch-btn" data-color="#00F0FF" style="background:#00F0FF;" title="Neon Cyan"></button>
+                                    <button type="button" class="color-swatch-btn" data-color="#FF007A" style="background:#FF007A;" title="Hot Pink"></button>
+                                    <button type="button" class="color-swatch-btn" data-color="#3B82F6" style="background:#3B82F6;" title="Royal Blue"></button>
+                                    <button type="button" class="color-swatch-btn" data-color="#10B981" style="background:#10B981;" title="Emerald Green"></button>
+                                    <button type="button" class="color-swatch-btn" data-color="#F59E0B" style="background:#F59E0B;" title="Warm Amber"></button>
+                                    <button type="button" class="color-swatch-btn" data-color="#8B5CF6" style="background:#8B5CF6;" title="Lavender Violet"></button>
+                                    <button type="button" class="color-swatch-btn" data-color="#EF4444" style="background:#EF4444;" title="Crimson Red"></button>
+                                    <button type="button" class="color-swatch-btn" data-color="#64748B" style="background:#64748B;" title="Slate Gray"></button>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:0.75rem; margin-top:1rem;">
+                                    <label style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">Custom Color Picker:</label>
+                                    <input type="color" id="bg-custom-hex-picker" value="#00F0FF" style="border:none; width:45px; height:35px; cursor:pointer; background:none;">
+                                    <span id="bg-custom-hex-text" style="font-family:monospace; font-size:0.85rem; color:var(--primary-cyan);">#00F0FF</span>
+                                </div>
+                            </div>
+
+                            <!-- Tab 3: Presets -->
+                            <div id="tab-content-presets" class="bg-tab-content">
+                                <div class="bg-presets-grid" id="bg-presets-container"></div>
+                            </div>
+
+                            <!-- Tab 4: Upload Custom Image -->
+                            <div id="tab-content-upload" class="bg-tab-content">
+                                <label for="bg-user-upload-input" style="display:block; padding:1.25rem; border:2px dashed var(--border-color); border-radius:var(--radius-sm); text-align:center; cursor:pointer; background:rgba(255,255,255,0.02);">
+                                    <div style="font-size:1.8rem; margin-bottom:0.25rem;">🌄</div>
+                                    <span style="font-size:0.85rem; font-weight:700; color:var(--primary-cyan);">Upload Background Image</span>
+                                    <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.2rem;">Choose any wallpaper, office, or landscape photo from your device</p>
+                                </label>
+                                <input type="file" id="bg-user-upload-input" class="file-input-hidden" accept="image/*">
+                            </div>
+
+                            <!-- Tab 5: Blur Original Background -->
+                            <div id="tab-content-blur" class="bg-tab-content">
+                                <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem;">
+                                    <label style="font-size:0.8rem; font-weight:700; color:var(--text-muted);">Portrait Blur Amount:</label>
+                                    <span id="bg-blur-val" style="font-size:0.85rem; font-weight:700; color:var(--primary-cyan);">15 px</span>
+                                </div>
+                                <input type="range" id="bg-blur-range" min="3" max="40" value="15" class="input-glow" style="width:100%;">
+                                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:0.5rem;">Blurs original photo background to create DSLR depth-of-field portrait mode.</p>
+                            </div>
+
+                            <!-- Download Actions -->
+                            <div style="display:flex; gap:0.75rem; margin-top:1.5rem; flex-wrap:wrap;">
+                                <button type="button" id="btn-download-png" class="btn-primary" style="flex:1;">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                    <span>Download HD (PNG)</span>
+                                </button>
+                                <button type="button" id="btn-download-jpg" class="btn-secondary" style="flex:1;">
+                                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                    <span>Download HD (JPG)</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tool 3: Advanced Image Editor & Resizer -->
+            <section id="view-img-resizer" class="tool-view">
+                <div class="tool-header-block">
+                    <h2>Advanced Image Editor & Resizer</h2>
+                    <p>Resize, crop, rotate, change dimensions in pixels (`px`), inches (`in`), centimeters (`cm`), and compress output to target KB file size.</p>
+                </div>
+                <div class="glass-panel card-content">
+                    <form id="img-resizer-form">
+                        <div id="resize-dropzone" class="dropzone">
+                            <div id="resize-dz-prompt">
+                                <div class="dropzone-icon">
+                                    <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><polyline points="11 3 11 11 3 11"></polyline></svg>
+                                </div>
+                                <h3 class="dropzone-title">Drop your image here to edit</h3>
+                                <p class="dropzone-subtitle">Supports PNG, JPG, WEBP formats</p>
+                            </div>
+
+                            <div id="resize-file-preview-card" class="file-preview-card" style="display:none;">
+                                <div class="preview-thumb-container">
+                                    <img id="resize-file-thumb" src="" alt="Selected Image Preview" class="preview-thumb">
+                                </div>
+                                <div class="preview-file-details">
+                                    <span class="preview-badge">EDIT READY</span>
+                                    <h4 id="resize-preview-name" class="preview-file-title">image.png</h4>
+                                    <div class="preview-meta">
+                                        <span id="resize-preview-size">0 KB</span> • <span id="resize-preview-dim">0 × 0 px</span>
+                                    </div>
+                                    <button type="button" id="resize-remove-file-btn" class="btn-text-danger">
+                                        🗑️ Change / Remove File
+                                    </button>
+                                </div>
+                            </div>
+
+                            <input type="file" id="resize-file-input" class="file-input-hidden" accept="image/*">
+                        </div>
+
+                        <div class="grid-2col" style="margin-top: 1.5rem;">
+                            <div class="form-group">
+                                <label for="resize-unit">Measurement Unit & Resolution</label>
+                                <div class="input-group">
+                                    <select id="resize-unit" class="input-glow" style="width:110px;">
+                                        <option value="px" selected>Pixels (px)</option>
+                                        <option value="in">Inches (in)</option>
+                                        <option value="cm">Centimeters (cm)</option>
+                                    </select>
+                                    <select id="resize-dpi" class="input-glow">
+                                        <option value="96" selected>96 DPI (Web/Screen)</option>
+                                        <option value="300">300 DPI (High Print Quality)</option>
+                                        <option value="72">72 DPI (Standard)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Target Dimensions</label>
+                                <div class="input-group">
+                                    <input type="number" id="resize-width" class="input-glow" placeholder="Width" value="1280" step="any" min="1">
+                                    <input type="number" id="resize-height" class="input-glow" placeholder="Height" value="720" step="any" min="1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1rem;">
+                            <label style="font-weight:600; color:var(--text-muted); text-transform:uppercase; font-size:0.85rem;">Rotation & Orientation</label>
+                            <div class="options-group" style="margin-top:0.5rem;">
+                                <button type="button" class="option-btn" id="btn-rotate-90">🔄 Rotate 90° CW</button>
+                                <button type="button" class="option-btn" id="btn-rotate-180">🔄 Rotate 180°</button>
+                                <button type="button" class="option-btn" id="btn-flip-h">↔️ Flip Horizontal</button>
+                                <button type="button" class="option-btn" id="btn-flip-v">↕️ Flip Vertical</button>
+                            </div>
+                        </div>
+
+                        <div class="grid-2col" style="margin-top: 1.5rem;">
+                            <div class="form-group">
+                                <label for="resize-crop-preset">Crop Aspect Ratio Preset</label>
+                                <select id="resize-crop-preset" class="input-glow">
+                                    <option value="none" selected>No Crop (Original Canvas)</option>
+                                    <option value="1:1">1:1 Square (Instagram / Profile)</option>
+                                    <option value="16:9">16:9 Widescreen (Video / YouTube)</option>
+                                    <option value="4:3">4:3 Standard Photo</option>
+                                    <option value="9:16">9:16 Story / Reels / Mobile</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="resize-target-kb">Target Max Output File Size (KB - Optional)</label>
+                                <input type="number" id="resize-target-kb" class="input-glow" placeholder="e.g. 200 (Leave empty for default)" min="10">
+                            </div>
+                        </div>
+
+                        <div style="display:flex; gap: 2rem; align-items:center; margin-top: 1rem; flex-wrap:wrap;">
+                            <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer; font-weight:600; color:var(--text-main);">
+                                <input type="checkbox" id="resize-maintain-aspect" checked style="width:18px; height:18px; accent-color:var(--primary-cyan);"> Maintain Aspect Ratio
+                            </label>
+
+                            <div style="display:flex; align-items:center; gap:0.75rem;">
+                                <label style="font-weight:600; color:var(--text-muted); text-transform:uppercase; font-size:0.85rem;">Output Format:</label>
+                                <select id="resize-format-select" class="input-glow" style="width:auto; padding:0.4rem 1rem;">
+                                    <option value="png" selected>PNG</option>
+                                    <option value="jpg">JPG</option>
+                                    <option value="webp">WEBP</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1.5rem; text-align: center;">
+                            <button type="submit" id="resize-process-btn" class="btn-primary" disabled>Process & Download Edited Image</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Tool 4: ORBIT PDF Document Suite -->
+            <section id="view-pdf-tools" class="tool-view">
+                <div class="tool-header-block">
+                    <h2>ORBIT PDF Document Suite</h2>
+                    <p>Complete client-side PDF utility: Convert Images to PDF, Merge multiple PDFs, Split PDF pages, and extract PDF to Images with genuine instant file downloads.</p>
+                </div>
+                <div class="glass-panel card-content">
+                    <div class="options-group" style="justify-content:center; margin-bottom: 1.5rem;">
+                        <button type="button" class="option-btn selected" data-pdf-sub="img2pdf">📸 Images to PDF</button>
+                        <button type="button" class="option-btn" data-pdf-sub="merge">🔗 Merge PDFs</button>
+                        <button type="button" class="option-btn" data-pdf-sub="split">✂️ Split PDF</button>
+                        <button type="button" class="option-btn" data-pdf-sub="pdf2img">🖼️ PDF to Images</button>
+                    </div>
+
+                    <form id="pdf-suite-form">
+                        <div id="pdf-dropzone" class="dropzone">
+                            <div id="pdf-dz-prompt">
+                                <div class="dropzone-icon">
+                                    <svg viewBox="0 0 24 24" width="32" height="32" stroke="currentColor" stroke-width="2" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+                                </div>
+                                <h3 id="pdf-dz-title" class="dropzone-title">Select Images to convert to PDF</h3>
+                                <p id="pdf-dz-subtitle" class="dropzone-subtitle">Drag and drop JPG, PNG, WEBP images here</p>
+                            </div>
+
+                            <div id="pdf-file-preview-container" class="multi-preview-container" style="display:none;">
+                                <div id="pdf-preview-gallery" class="preview-gallery-grid"></div>
+                                <div class="multi-preview-footer">
+                                    <span id="pdf-file-count-badge" class="preview-summary-badge">0 File(s) Selected</span>
+                                    <button type="button" id="pdf-clear-files-btn" class="btn-text-danger">
+                                        🗑️ Clear Selection
+                                    </button>
+                                </div>
+                            </div>
+
+                            <input type="file" id="pdf-file-input" class="file-input-hidden" multiple accept="image/*,.pdf">
+                        </div>
+
+                        <!-- ORBIT PDF Options Bar -->
+                        <div id="pdf-options-bar" class="orbit-pdf-options-bar">
+                            <div class="orbit-pdf-opt-item" id="opt-img2pdf-orient">
+                                <span class="orbit-pdf-opt-label">Page Orientation</span>
+                                <select id="pdf-orientation" class="input-glow" style="width:140px; padding:0.4rem;">
+                                    <option value="p" selected>Portrait</option>
+                                    <option value="l">Landscape</option>
+                                </select>
+                            </div>
+                            <div class="orbit-pdf-opt-item" id="opt-img2pdf-size">
+                                <span class="orbit-pdf-opt-label">Page Size</span>
+                                <select id="pdf-page-size" class="input-glow" style="width:140px; padding:0.4rem;">
+                                    <option value="a4" selected>A4 (Standard)</option>
+                                    <option value="fit">Fit to Image</option>
+                                    <option value="letter">US Letter</option>
+                                </select>
+                            </div>
+                            <div class="orbit-pdf-opt-item" id="opt-img2pdf-margin">
+                                <span class="orbit-pdf-opt-label">Margin</span>
+                                <select id="pdf-margin" class="input-glow" style="width:130px; padding:0.4rem;">
+                                    <option value="none" selected>No Margin</option>
+                                    <option value="small">Small (20pt)</option>
+                                    <option value="big">Big (40pt)</option>
+                                </select>
+                            </div>
+
+                            <!-- Options for Split PDF -->
+                            <div class="orbit-pdf-opt-item" id="opt-split-range" style="display:none; flex:1; min-width:200px;">
+                                <span class="orbit-pdf-opt-label">Page Range to Extract</span>
+                                <input type="text" id="pdf-split-pages" class="input-glow" placeholder="e.g. 1-3 or 1,2,5" value="1">
+                            </div>
+                        </div>
+
+                        <div style="margin-top:1.5rem; text-align:center;">
+                            <button type="submit" id="pdf-process-btn" class="btn-primary" disabled>
+                                <span>⚡ CONVERT & DOWNLOAD (ORBIT Engine)</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Tool 5: Invoice Generator -->
+            <section id="view-invoice" class="tool-view">
+                <div class="tool-header-block">
+                    <h2>Professional GST Invoice Generator</h2>
+                    <p>Generate GST-compliant Tax Invoices with ₹ (INR), GSTIN, HSN/SAC codes, CGST/SGST or IGST tax splits, and Amount in Words (Lakhs & Crores).</p>
+                </div>
+                <div class="glass-panel card-content">
+                    <form id="invoice-form">
+                        <div class="grid-2col">
+                            <div>
+                                <h3 style="margin-bottom:1rem; color:var(--primary-cyan);">Supplier / Issuer Info</h3>
+                                <div class="form-group">
+                                    <label>Company / Supplier Name</label>
+                                    <input type="text" id="gst-sup-name" class="input-glow" value="ORBIT Digital Technologies Pvt. Ltd.">
+                                </div>
+                                <div class="grid-2col">
+                                    <div class="form-group">
+                                        <label>GSTIN (15 Digits)</label>
+                                        <input type="text" id="gst-sup-gstin" class="input-glow" value="06AAAAA0000A1Z5" max="15">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>PAN Number</label>
+                                        <input type="text" id="gst-sup-pan" class="input-glow" value="AAAAA0000A" max="10">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Supplier Address</label>
+                                    <input type="text" id="gst-sup-addr" class="input-glow" value="Plot 42, Cyber City, Sector 24, Gurugram, Haryana - 122002">
+                                </div>
+                                <div class="grid-2col">
+                                    <div class="form-group">
+                                        <label>Supplier State</label>
+                                        <input type="text" id="gst-sup-state" class="input-glow" value="Haryana">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>State Code</label>
+                                        <input type="text" id="gst-sup-code" class="input-glow" value="06">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 style="margin-bottom:1rem; color:var(--primary-cyan);">Receiver / Billed To Details</h3>
+                                <div class="form-group">
+                                    <label>Recipient / Client Name</label>
+                                    <input type="text" id="gst-rec-name" class="input-glow" value="Apex Tech Enterprises India Pvt. Ltd.">
+                                </div>
+                                <div class="form-group">
+                                    <label>Client GSTIN</label>
+                                    <input type="text" id="gst-rec-gstin" class="input-glow" value="27BBBBB1111B1Z2" max="15">
+                                </div>
+                                <div class="form-group">
+                                    <label>Client Billing Address</label>
+                                    <input type="text" id="gst-rec-addr" class="input-glow" value="BKC Complex, Bandra East, Mumbai, Maharashtra - 400051">
+                                </div>
+                                <div class="grid-2col">
+                                    <div class="form-group">
+                                        <label>Client State</label>
+                                        <input type="text" id="gst-rec-state" class="input-glow" value="Maharashtra">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>State Code</label>
+                                        <input type="text" id="gst-rec-code" class="input-glow" value="27">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid-2col" style="margin-top: 1.5rem;">
+                            <div>
+                                <div class="grid-2col">
+                                    <div class="form-group">
+                                        <label>Invoice Number</label>
+                                        <input type="text" id="gst-inv-num" class="input-glow" value="INV/2026-27/089">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Invoice Date</label>
+                                        <input type="date" id="gst-inv-date" class="input-glow" value="2026-09-18">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Place of Supply</label>
+                                    <input type="text" id="gst-pos" class="input-glow" value="27 - Maharashtra">
+                                </div>
+                            </div>
+                            <div>
+                                <label style="font-weight:600; color:var(--text-muted); text-transform:uppercase; font-size:0.85rem;">GST Tax Classification</label>
+                                <div class="options-group" style="margin-top:0.5rem;">
+                                    <label class="option-btn selected">
+                                        <input type="radio" name="gst_supply_type" value="interstate" checked style="display:none;"> Inter-State (IGST 18%)
+                                    </label>
+                                    <label class="option-btn">
+                                        <input type="radio" name="gst_supply_type" value="intrastate" style="display:none;"> Intra-State (CGST 9% + SGST 9%)
+                                    </label>
+                                </div>
+
+                                <div class="form-group" style="margin-top:1rem;">
+                                    <label for="gst-rate-select">Applicable GST Slab (%)</label>
+                                    <select id="gst-rate-select" class="input-glow">
+                                        <option value="18" selected>18% Standard Services & Tech</option>
+                                        <option value="12">12% Standard Goods</option>
+                                        <option value="5">5% Essential Items</option>
+                                        <option value="28">28% Luxury / Special</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 2rem;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <h3>Goods & Services Line Items</h3>
+                                <button type="button" id="inv-add-item" class="btn-secondary">+ Add GST Row</button>
+                            </div>
+                            <table class="invoice-table">
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>HSN/SAC</th>
+                                        <th>Qty</th>
+                                        <th>Unit</th>
+                                        <th>Rate (₹)</th>
+                                        <th>Taxable Value (₹)</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inv-items-body"></tbody>
+                            </table>
+                        </div>
+
+                        <div class="grid-2col" style="margin-top: 1.5rem;">
+                            <div class="form-group">
+                                <label>Bank Account & Terms</label>
+                                <textarea id="gst-notes" class="input-glow" rows="4">HDFC Bank • A/C: 50200012345678 • IFSC: HDFC0000123 • Branch: Gurugram DLF Phase 5</textarea>
+                            </div>
+                            <div style="background: rgba(10,12,24,0.6); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                                <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem;">
+                                    <span>Taxable Subtotal:</span>
+                                    <span id="gst-taxable-val">₹ 0.00</span>
+                                </div>
+                                <div id="row-igst" style="display:flex; justify-content:space-between; margin-bottom: 0.5rem;">
+                                    <span>IGST (18%):</span>
+                                    <span id="gst-igst-val">₹ 0.00</span>
+                                </div>
+                                <div id="row-cgst-sgst" style="display:none; flex-direction:column; gap:0.5rem; margin-bottom: 0.5rem;">
+                                    <div style="display:flex; justify-content:space-between;">
+                                        <span>CGST (9%):</span>
+                                        <span id="gst-cgst-val">₹ 0.00</span>
+                                    </div>
+                                    <div style="display:flex; justify-content:space-between;">
+                                        <span>SGST (9%):</span>
+                                        <span id="gst-sgst-val">₹ 0.00</span>
+                                    </div>
+                                </div>
+                                <hr style="border-color: var(--border-color); margin: 0.75rem 0;">
+                                <div style="display:flex; justify-content:space-between; font-size:1.25rem; font-weight:700; color:var(--primary-cyan);">
+                                    <span>Grand Total:</span>
+                                    <span id="gst-grand-total">₹ 0.00</span>
+                                </div>
+                                <div style="margin-top:0.75rem; font-size:0.85rem; color:var(--text-muted);">
+                                    <b>In Words:</b> <span id="gst-words-preview">Rupees Zero Only</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 2rem; text-align: center;">
+                            <button type="submit" id="inv-submit-btn" class="btn-primary">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                <span>Download Tax Invoice (PDF)</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Tool 6: CV / Resume Maker (NEW) -->
+            <section id="view-cv-maker" class="tool-view">
+                <div class="tool-header-block">
+                    <h2>Professional CV / Resume Maker</h2>
+                    <p>Build executive resumes with dynamic work experience, education rows, technical skills, and instant PDF download.</p>
+                </div>
+                <div class="glass-panel card-content">
+                    <form id="cv-maker-form">
+                        <!-- Template & Personal Header -->
+                        <div class="grid-2col">
+                            <div>
+                                <h3 style="margin-bottom:1rem; color:var(--primary-cyan);">Personal Information</h3>
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="cv-name" class="input-glow" value="Aman Sharma">
+                                </div>
+                                <div class="form-group">
+                                    <label>Job Title / Target Role</label>
+                                    <input type="text" id="cv-title" class="input-glow" value="Senior Software & AI Engineer">
+                                </div>
+                                <div class="grid-2col">
+                                    <div class="form-group">
+                                        <label>Email Address</label>
+                                        <input type="email" id="cv-email" class="input-glow" value="aman.sharma@example.com">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Phone Number</label>
+                                        <input type="text" id="cv-phone" class="input-glow" value="+91 98765 43210">
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 style="margin-bottom:1rem; color:var(--primary-cyan);">Location & Style Template</h3>
+                                <div class="form-group">
+                                    <label>Location / City, Country</label>
+                                    <input type="text" id="cv-location" class="input-glow" value="New Delhi, India">
+                                </div>
+                                <div class="form-group">
+                                    <label>Portfolio / LinkedIn / GitHub</label>
+                                    <input type="text" id="cv-website" class="input-glow" value="https://github.com/aman-sharma">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cv-template-select">CV Design Template</label>
+                                    <select id="cv-template-select" class="input-glow">
+                                        <option value="modern" selected>Modern Tech (Neon Cyan Accent)</option>
+                                        <option value="executive">Executive Corporate (Classic Navy)</option>
+                                        <option value="minimal">Minimal Slate (Clean Monochrome)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Professional Summary -->
+                        <div class="form-group" style="margin-top:1.5rem;">
+                            <label>Professional Summary</label>
+                            <textarea id="cv-summary" class="input-glow" rows="3">Results-driven Senior Software Engineer with 5+ years of experience designing scalable web platforms, AI models, and cloud microservices.</textarea>
+                        </div>
+
+                        <!-- Work Experience Section -->
+                        <div style="margin-top: 2rem;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                                <h3>Work Experience</h3>
+                                <button type="button" id="cv-add-exp" class="btn-secondary">+ Add Experience</button>
+                            </div>
+                            <div id="cv-exp-container"></div>
+                        </div>
+
+                        <!-- Education Section -->
+                        <div style="margin-top: 2rem;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                                <h3>Education & Qualifications</h3>
+                                <button type="button" id="cv-add-edu" class="btn-secondary">+ Add Education</button>
+                            </div>
+                            <div id="cv-edu-container"></div>
+                        </div>
+
+                        <!-- Skills Section -->
+                        <div style="margin-top: 2rem;">
+                            <h3>Skills & Technologies</h3>
+                            <div class="form-group" style="margin-top:0.75rem;">
+                                <label>Type a skill and press Enter or comma:</label>
+                                <input type="text" id="cv-skill-input" class="input-glow" placeholder="e.g. Python, Docker, React">
+                            </div>
+                            <div id="cv-skills-tags" style="margin-top:0.5rem;"></div>
+                        </div>
+
+                        <div style="margin-top: 2rem; text-align: center;">
+                            <button type="submit" id="cv-submit-btn" class="btn-primary">
+                                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                <span>Generate & Download CV (PDF)</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Dedicated Backend Proxy Settings Modal -->
+        <div id="backend-modal" class="orbit-modal-backdrop" style="display:none;">
+            <div class="orbit-modal-card glass-panel" style="max-width:540px; width:90%; padding:1.75rem; border-radius:var(--radius-md); border:1px solid var(--border-color); background:rgba(14,18,36,0.95); box-shadow:0 15px 40px rgba(0,0,0,0.85);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                    <h3 style="margin:0; font-size:1.15rem; color:var(--text-main); display:flex; align-items:center; gap:0.5rem;">
+                        <span>⚡ Dedicated Extraction Proxy</span>
+                    </h3>
+                    <button type="button" id="btn-close-backend-modal" style="background:none; border:none; color:var(--text-muted); font-size:1.6rem; cursor:pointer; line-height:1;">&times;</button>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.25rem; line-height:1.5;">
+                    ORBIT routes heavy media extraction & anti-403 scraping through your dedicated serverless backend proxy (Render, Vercel, Railway, or local).
+                </p>
+                <div class="form-group" style="margin-bottom:1.25rem;">
+                    <label for="backend-url-input" style="font-size:0.85rem; color:var(--text-main); font-weight:600; display:block; margin-bottom:0.4rem;">
+                        Backend Proxy Endpoint URL:
+                    </label>
+                    <input type="url" id="backend-url-input" class="input-glow" placeholder="https://your-backend.onrender.com (or leave empty for auto/local)" style="width:100%; padding:0.75rem 1rem; border-radius:var(--radius-sm); font-size:0.9rem;">
+                    <span style="font-size:0.75rem; color:var(--text-dim); margin-top:0.35rem; display:block;">
+                        Leave empty if using local backend or Netlify serverless routing.
+                    </span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
+                    <span id="backend-test-feedback" style="font-size:0.8rem; color:var(--text-dim);">Checking connection...</span>
+                    <div style="display:flex; gap:0.5rem;">
+                        <button type="button" id="btn-reset-backend" class="option-btn" style="padding:0.55rem 0.9rem; font-size:0.82rem;">Default</button>
+                        <button type="button" id="btn-save-backend" class="btn-primary" style="padding:0.55rem 1.15rem; font-size:0.82rem;">Save & Connect</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification Area -->
+        <div id="toast-container"></div>
+
+        <!-- Footer -->
+        <footer class="orbit-footer">
+            <p>ORBIT Dynamic Utility Suite • Powered by FastAPI & HTML5 Canvas • Space Engine</p>
+        </footer>
+
+    </div>
+
+    <!-- Application Scripts -->
+    <script src="js/orbit_canvas.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/invoice.js"></script>
+    <script src="js/cv_maker.js"></script>
+</body>
+</html>
